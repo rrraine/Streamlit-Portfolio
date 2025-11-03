@@ -3,6 +3,7 @@ import random
 import os
 import yagmail as yagmail
 from datetime import date
+from streamlit_drawable_canvas import st_canvas
 
 
 # PAGE CONFIG 
@@ -173,6 +174,8 @@ with tabs[2]:
     col3.progress(0.65)
     col3.write("JavaFX 🎨")
 
+
+# extras
 with tabs[3]:
     st.header("📊 Extras & Fun Features")
 
@@ -193,7 +196,34 @@ with tabs[3]:
     else:
         st.warning("Give them some extra cuddles today 🧡")
 
+    with st.container():
+        st.subheader("🎨 Doodle Something!")
+        st.write("Draw freely below 🖌️")
 
+        canvas_result = st_canvas(
+            fill_color="rgba(255, 165, 0, 0.3)",
+            stroke_width=3,
+            stroke_color="#000000",
+            background_color="#ffffff",
+            height=300,
+            width=600,
+            drawing_mode="freedraw",
+            key="lorraine_canvas_01",  # fixed, unique key
+        )
+#     st.components.v1.html(
+#     """
+#     <iframe
+#         src="https://funhtml5games.com?embed=flappybird"
+#         width="100%"
+#         height="600"
+#         frameborder="0"
+#         scrolling="no">
+#     </iframe>
+#     """,
+#     height=600,
+#    )
+
+#contact me
 with tabs[4]:
     st.header("📫 Contact Me")
 
