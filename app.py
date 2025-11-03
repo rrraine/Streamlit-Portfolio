@@ -200,33 +200,38 @@ with tabs[3]:
         st.subheader("🎨 Pixel Painter Mini-Game")
         st.write("Click colors and paint the grid below 🎨")
 
-        # --- Color picker
         color = st.color_picker("Choose your color", "#FF69B4")
 
-        # --- Initialize grid in session state
+        # --- Initialize grid
         if "grid" not in st.session_state:
             st.session_state.grid = [["#FFFFFF" for _ in range(8)] for _ in range(8)]
 
-        # --- Display 8x8 grid
+        # --- Centered grid layout using markdown table
+        grid_html = "<div style='display:flex; justify-content:center;'><table style='border-collapse: collapse;'>"
         for i in range(8):
-            cols = st.columns(8)
+            grid_html += "<tr>"
             for j in range(8):
-                if cols[j].button(" ", key=f"pixel_{i}_{j}", help="Click to color"):
-                    st.session_state.grid[i][j] = color
-                cols[j].markdown(
-                    f"""
-                    <div style='background-color:{st.session_state.grid[i][j]};
-                                width:30px; height:30px; border-radius:4px;
-                                border:1px solid #ccc;'>
-                    </div>
-                    """,
-                    unsafe_allow_html=True,
-                )
+                color_hex = st.session_state.grid[i][j]
+                grid_html += f"""
+                <td style='padding:2px;'>
+                    <button style='background-color:{color_hex};
+                                width:30px; height:30px;
+                                border:none; border-radius:4px;
+                                cursor:pointer;' 
+                            onClick="fetch('/?pixel={i}_{j}')">
+                    </button>
+                </td>
+                """
+            grid_html += "</tr>"
+        grid_html += "</table></div>"
+
+        st.markdown(grid_html, unsafe_allow_html=True)
 
         # --- Reset button
         if st.button("🧹 Clear Canvas"):
             st.session_state.grid = [["#FFFFFF" for _ in range(8)] for _ in range(8)]
             st.rerun()
+
 
     # with st.container():
     #     st.subheader("🎨 Doodle Something!")
