@@ -237,6 +237,36 @@ with tabs[3]:
             st.session_state.game_active = False
             st.session_state.click_start_time = None
             st.session_state.click_count = 0
+    
+    with st.container():
+        if "cards" not in st.session_state:
+            st.session_state.cards = random.sample(["🐱", "🐶", "🐰", "🐱", "🐶", "🐰"], 6)
+            st.session_state.flipped = []
+            st.session_state.matched = []
+
+        st.header("🧠 Memory Match Mini Game")
+
+        cols = st.columns(3)
+        for i, emoji in enumerate(st.session_state.cards):
+            with cols[i % 3]:
+                if i in st.session_state.flipped or i in st.session_state.matched:
+                    st.button(emoji, key=f"card_{i}")
+                else:
+                    if st.button("❓", key=f"card_{i}"):
+                        st.session_state.flipped.append(i)
+
+        # Check for matches
+        if len(st.session_state.flipped) == 2:
+            a, b = st.session_state.flipped
+            if st.session_state.cards[a] == st.session_state.cards[b]:
+                st.session_state.matched.extend([a, b])
+            st.session_state.flipped = []
+
+        # Restart game
+        if st.button("🔄 Restart Game"):
+            st.session_state.cards = random.sample(["🐱", "🐶", "🐰", "🐱", "🐶", "🐰"], 6)
+            st.session_state.flipped = []
+            st.session_state.matched = []
     # with st.container():
     #     st.subheader("🎨 Doodle Something!")
     #     st.write("Draw freely below 🖌️")
