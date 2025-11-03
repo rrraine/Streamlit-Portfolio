@@ -196,37 +196,76 @@ with tabs[3]:
     else:
         st.warning("Give them some extra cuddles today 🧡")
 
+
+    # --- Configuration ---
+    GRID_SIZE = 8
+    DEFAULT_COLOR = "#FFFFFF"
+    INITIAL_GRID = [[DEFAULT_COLOR for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
+
+    # --- State Management ---
+    if "grid" not in st.session_state:
+        st.session_state.grid = INITIAL_GRID
+    if "current_color" not in st.session_state:
+        st.session_state.current_color = "#FF69B4"
+
+    # --- Callback Functions ---
+    def click_pixel(i, j):
+        """Changes the color of the selected pixel."""
+        st.session_state.grid[i][j] = st.session_state.current_color
+
+    def clear_canvas():
+        """Resets the grid to all white."""
+        st.session_state.grid = INITIAL_GRID
+
+    # --- App Layout ---
     with st.container():
         st.subheader("🎨 Pixel Painter Mini-Game")
-        st.write("Click colors and paint the grid below 🎨")
+        
+        # Color Picker & Reset Button in columns
+        col1, col2 = st.columns([1, 1])
+        
+        with col1:
+            st.color_picker("🖍️ Choose Color", "#FF69B4", key="current_color")
+        
+        with col2:
+            # Padding for alignment
+            st.write(" ") 
+            st.button("🧹 Clear Canvas", on_click=clear_canvas)
 
-        # --- Color picker
-        color = st.color_picker("Choose your color", "#FF69B4")
+        st.markdown("---")
 
-        # --- Initialize grid in session state
-        if "grid" not in st.session_state:
-            st.session_state.grid = [["#FFFFFF" for _ in range(8)] for _ in range(8)]
-
-        # --- Display 8x8 grid
-        for i in range(8):
-            cols = st.columns(8)
-            for j in range(8):
-                if cols[j].button(" ", key=f"pixel_{i}_{j}", help="Click to color"):
-                    st.session_state.grid[i][j] = color
+        # --- Grid Display (8x8) ---
+        for i in range(GRID_SIZE):
+            # Create columns for each row
+            cols = st.columns(GRID_SIZE) 
+            
+            for j in range(GRID_SIZE):
+                pixel_color = st.session_state.grid[i][j]
+                
+                # 1. Button (Invisible click target)
+                cols[j].button(
+                    " ", 
+                    key=f"pixel_{i}_{j}", 
+                    on_click=click_pixel, 
+                    args=(i, j),
+                    help=f"Color: {pixel_color}"
+                )
+                
+                # 2. Markdown (Visual color display - placed immediately after the button)
                 cols[j].markdown(
                     f"""
-                    <div style='background-color:{st.session_state.grid[i][j]};
+                    <div style='background-color:{pixel_color};
                                 width:30px; height:30px; border-radius:4px;
-                                border:1px solid #ccc;'>
+                                border:1px solid #ccc; margin: 0;'>
                     </div>
                     """,
                     unsafe_allow_html=True,
                 )
 
-        # --- Reset button
-        if st.button("🧹 Clear Canvas"):
-            st.session_state.grid = [["#FFFFFF" for _ in range(8)] for _ in range(8)]
-            st.rerun()
+            # --- Reset button
+            if st.button("🧹 Clear Canvas"):
+                st.session_state.grid = [["#FFFFFF" for _ in range(8)] for _ in range(8)]
+                st.rerun()
 
     # with st.container():
     #     st.subheader("🎨 Doodle Something!")
