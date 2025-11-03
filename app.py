@@ -197,76 +197,61 @@ with tabs[3]:
     else:
         st.warning("Give them some extra cuddles today 🧡")
 
+      
     with st.container():
-        # st.subheader("🎲 Roll the Dice!")
-
-        # if st.button("Roll!"):
-        #     dice = random.randint(1, 6)
-        #     st.image(f"https://upload.wikimedia.org/wikipedia/commons/{dice}/Dice-{dice}-b.svg", width=100)
-        #     st.write(f"You rolled a **{dice}**!")
-
-        st.subheader("🎯 Reflex Speed Challenge")
-
-        if "click_start_time" not in st.session_state:
-            st.session_state.click_start_time = None
-        if "click_count" not in st.session_state:
-            st.session_state.click_count = 0
-        if "game_active" not in st.session_state:
-            st.session_state.game_active = False
-
-        # Start button
-        if not st.session_state.game_active:
-            if st.button("▶️ Start 5-Second Challenge"):
-                st.session_state.click_start_time = time.time()
-                st.session_state.click_count = 0
-                st.session_state.game_active = True
-                st.success("Go! Start clicking the button below as fast as you can!")
-        else:
-            elapsed = time.time() - st.session_state.click_start_time
-            if elapsed < 5:
-                if st.button("🖱️ Click Me!"):
-                    st.session_state.click_count += 1
-                    st.toast(f"Clicks: {st.session_state.click_count}", icon="🔥")
-            else:
-                st.session_state.game_active = False
-                st.balloons()
-                st.success(f"Time’s up! You clicked {st.session_state.click_count} times in 5 seconds!")
-
-        # Reset
-        if st.button("🔄 Reset Game"):
-            st.session_state.game_active = False
-            st.session_state.click_start_time = None
-            st.session_state.click_count = 0
-    
-    with st.container():
-        if "cards" not in st.session_state:
-            st.session_state.cards = random.sample(["🐱", "🐶", "🐰", "🐱", "🐶", "🐰"], 6)
-            st.session_state.flipped = []
-            st.session_state.matched = []
-
         st.header("🧠 Memory Match Mini Game")
 
-        cols = st.columns(3)
+        # Initialize session state
+        if "cards" not in st.session_state:
+            emojis = ["🐱", "🐶", "🐰", "🐹", "🐸", "🐼"]
+            st.session_state.cards = random.sample(emojis * 2, len(emojis) * 2)
+            st.session_state.flipped = []
+            st.session_state.matched = []
+            st.session_state.attempts = 0
+            st.session_state.start_time = time.time()
+
+        # Grid display (3x4)
+        cols = st.columns(4)
         for i, emoji in enumerate(st.session_state.cards):
-            with cols[i % 3]:
+            with cols[i % 4]:
                 if i in st.session_state.flipped or i in st.session_state.matched:
-                    st.button(emoji, key=f"card_{i}")
+                    st.button(emoji, key=f"card_{i}", disabled=True)
                 else:
                     if st.button("❓", key=f"card_{i}"):
                         st.session_state.flipped.append(i)
 
-        # Check for matches
+        # Check match logic
         if len(st.session_state.flipped) == 2:
             a, b = st.session_state.flipped
+            st.session_state.attempts += 1
             if st.session_state.cards[a] == st.session_state.cards[b]:
                 st.session_state.matched.extend([a, b])
+                st.toast("✨ Match found!", icon="🎉")
+            else:
+                st.toast("❌ Not a match, try again!", icon="😅")
+            time.sleep(0.7)
             st.session_state.flipped = []
 
-        # Restart game
+        # Display stats
+        st.markdown("---")
+        st.metric("Attempts", st.session_state.attempts)
+        st.metric("Matches Found", len(st.session_state.matched) // 2)
+
+        # Win condition
+        if len(st.session_state.matched) == len(st.session_state.cards):
+            st.balloons()
+            elapsed = round(time.time() - st.session_state.start_time, 1)
+            st.success(f"🏁 You matched all pairs in {st.session_state.attempts} attempts and {elapsed} seconds!")
+
+        # Restart button
         if st.button("🔄 Restart Game"):
-            st.session_state.cards = random.sample(["🐱", "🐶", "🐰", "🐱", "🐶", "🐰"], 6)
+            emojis = ["🐱", "🐶", "🐰", "🐹", "🐸", "🐼"]
+            st.session_state.cards = random.sample(emojis * 2, len(emojis) * 2)
             st.session_state.flipped = []
             st.session_state.matched = []
+            st.session_state.attempts = 0
+            st.session_state.start_time = time.time()
+
     # with st.container():
     #     st.subheader("🎨 Doodle Something!")
     #     st.write("Draw freely below 🖌️")
