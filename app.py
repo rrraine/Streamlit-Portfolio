@@ -207,47 +207,36 @@ with tabs[3]:
 
         st.subheader("🎯 Reflex Speed Challenge")
 
-        if "game_state" not in st.session_state:
-            st.session_state.game_state = "ready"
-        if "start_time" not in st.session_state:
-            st.session_state.start_time = 0
-        if "reaction_time" not in st.session_state:
-            st.session_state.reaction_time = 0
+        if "click_start_time" not in st.session_state:
+            st.session_state.click_start_time = None
+        if "click_count" not in st.session_state:
+            st.session_state.click_count = 0
+        if "game_active" not in st.session_state:
+            st.session_state.game_active = False
 
-        if st.session_state.game_state == "ready":
-            st.info("Click **Start Game** and wait until the box turns green. Then click as FAST as you can!")
-            if st.button("Start Game"):
-                st.session_state.game_state = "waiting"
-                st.session_state.start_time = 0
-                st.experimental_rerun()
-
-        elif st.session_state.game_state == "waiting":
-            wait_time = random.uniform(2, 5)
-            st.write("⏳ Wait for it...")
-            time.sleep(wait_time)
-            st.session_state.start_time = time.time()
-            st.session_state.game_state = "go"
-            st.experimental_rerun()
-
-        elif st.session_state.game_state == "go":
-            st.markdown(
-                "<div style='background-color:#00ff00; height:100px; text-align:center; padding-top:30px; font-size:20px;'>"
-                "CLICK NOW!</div>",
-                unsafe_allow_html=True
-            )
-            if st.button("Click!"):
-                st.session_state.reaction_time = round((time.time() - st.session_state.start_time) * 1000, 2)
-                st.session_state.game_state = "result"
-                st.experimental_rerun()
-
-        elif st.session_state.game_state == "result":
-            st.success(f"⚡ Your reaction time: {st.session_state.reaction_time} ms")
-            if st.session_state.reaction_time < 250:
+        # Start button
+        if not st.session_state.game_active:
+            if st.button("▶️ Start 5-Second Challenge"):
+                st.session_state.click_start_time = time.time()
+                st.session_state.click_count = 0
+                st.session_state.game_active = True
+                st.success("Go! Start clicking the button below as fast as you can!")
+        else:
+            elapsed = time.time() - st.session_state.click_start_time
+            if elapsed < 5:
+                if st.button("🖱️ Click Me!"):
+                    st.session_state.click_count += 1
+                    st.toast(f"Clicks: {st.session_state.click_count}", icon="🔥")
+            else:
+                st.session_state.game_active = False
                 st.balloons()
-            if st.button("Play Again"):
-                st.session_state.game_state = "ready"
-                st.experimental_rerun()
+                st.success(f"Time’s up! You clicked {st.session_state.click_count} times in 5 seconds!")
 
+        # Reset
+        if st.button("🔄 Reset Game"):
+            st.session_state.game_active = False
+            st.session_state.click_start_time = None
+            st.session_state.click_count = 0
     # with st.container():
     #     st.subheader("🎨 Doodle Something!")
     #     st.write("Draw freely below 🖌️")
