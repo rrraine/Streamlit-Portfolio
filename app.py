@@ -197,38 +197,12 @@ with tabs[3]:
         st.warning("Give them some extra cuddles today 🧡")
 
     with st.container():
-        st.subheader("🎨 Pixel Painter")
-        st.write("Click on a square to fill it with your selected color!")
+        st.subheader("🎲 Roll the Dice!")
 
-        # Choose color
-        color = st.color_picker("Pick your color 🎨", "#FF69B4")
-
-        # Initialize grid
-        rows, cols = 8, 8
-        if "grid" not in st.session_state:
-            st.session_state.grid = [["#FFFFFF" for _ in range(cols)] for _ in range(rows)]
-
-        # Display grid interactively
-        for i in range(rows):
-            cols_group = st.columns(cols, gap="small")
-            for j in range(cols):
-                with cols_group[j]:
-                    if st.button(" ", key=f"{i}_{j}", 
-                                help="Click to color this square"):
-                        st.session_state.grid[i][j] = color
-                    st.markdown(
-                        f"""
-                        <div style='background-color:{st.session_state.grid[i][j]};
-                                    width:40px; height:40px;
-                                    border-radius:6px; border:1px solid #ddd;'>
-                        </div>
-                        """, unsafe_allow_html=True
-                    )
-
-        # Reset button
-        if st.button("🧹 Clear Canvas"):
-            st.session_state.grid = [["#FFFFFF" for _ in range(cols)] for _ in range(rows)]
-            st.rerun()
+        if st.button("Roll!"):
+            dice = random.randint(1, 6)
+            st.image(f"https://upload.wikimedia.org/wikipedia/commons/{dice}/Dice-{dice}-b.svg", width=100)
+            st.write(f"You rolled a **{dice}**!")
 
 
     # with st.container():
