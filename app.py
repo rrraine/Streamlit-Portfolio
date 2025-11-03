@@ -197,39 +197,37 @@ with tabs[3]:
         st.warning("Give them some extra cuddles today 🧡")
 
     with st.container():
-        st.subheader("🎨 Pixel Painter Mini-Game")
-        st.write("Click colors and paint the grid below 🎨")
+        st.subheader("🎨 Pixel Painter")
+        st.write("Click on a square to fill it with your selected color!")
 
-        color = st.color_picker("Choose your color", "#FF69B4")
+        # Choose color
+        color = st.color_picker("Pick your color 🎨", "#FF69B4")
 
-        # --- Initialize grid
+        # Initialize grid
+        rows, cols = 8, 8
         if "grid" not in st.session_state:
-            st.session_state.grid = [["#FFFFFF" for _ in range(8)] for _ in range(8)]
+            st.session_state.grid = [["#FFFFFF" for _ in range(cols)] for _ in range(rows)]
 
-        # --- Centered grid layout using markdown table
-        grid_html = "<div style='display:flex; justify-content:center;'><table style='border-collapse: collapse;'>"
-        for i in range(8):
-            grid_html += "<tr>"
-            for j in range(8):
-                color_hex = st.session_state.grid[i][j]
-                grid_html += f"""
-                <td style='padding:2px;'>
-                    <button style='background-color:{color_hex};
-                                width:30px; height:30px;
-                                border:none; border-radius:4px;
-                                cursor:pointer;' 
-                            onClick="fetch('/?pixel={i}_{j}')">
-                    </button>
-                </td>
-                """
-            grid_html += "</tr>"
-        grid_html += "</table></div>"
+        # Display grid interactively
+        for i in range(rows):
+            cols_group = st.columns(cols, gap="small")
+            for j in range(cols):
+                with cols_group[j]:
+                    if st.button(" ", key=f"{i}_{j}", 
+                                help="Click to color this square"):
+                        st.session_state.grid[i][j] = color
+                    st.markdown(
+                        f"""
+                        <div style='background-color:{st.session_state.grid[i][j]};
+                                    width:40px; height:40px;
+                                    border-radius:6px; border:1px solid #ddd;'>
+                        </div>
+                        """, unsafe_allow_html=True
+                    )
 
-        st.markdown(grid_html, unsafe_allow_html=True)
-
-        # --- Reset button
+        # Reset button
         if st.button("🧹 Clear Canvas"):
-            st.session_state.grid = [["#FFFFFF" for _ in range(8)] for _ in range(8)]
+            st.session_state.grid = [["#FFFFFF" for _ in range(cols)] for _ in range(rows)]
             st.rerun()
 
 
