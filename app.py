@@ -200,6 +200,7 @@ with tabs[3]:
       
     with st.container():
         st.header("🧠 Memory Match Mini Game")
+        st.write("Double click the cards to flip.")
 
         # Initialize session state
         if "cards" not in st.session_state:
