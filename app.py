@@ -233,52 +233,25 @@ with tabs[3]:
             time.sleep(0.7)
             st.session_state.flipped = []
 
-        # Display stats
-        st.markdown("---")
-        st.metric("Attempts", st.session_state.attempts)
-        st.metric("Matches Found", len(st.session_state.matched) // 2)
-
+      
         # Win condition
         if len(st.session_state.matched) == len(st.session_state.cards):
             st.balloons()
             elapsed = round(time.time() - st.session_state.start_time, 1)
             st.success(f"🏁 You matched all pairs in {st.session_state.attempts} attempts and {elapsed} seconds!")
 
-        # Restart button
-        if st.button("🔄 Restart Game"):
+        # Display stats
+        st.markdown("---")
+        cols = st.columns([1, 1, 1, 1])  # Adjust width ratio if needed
+        cols[0].metric("Attempts", st.session_state.attempts)
+        cols[1].metric("Matches Found", len(st.session_state.matched) // 2)
+        if cols[2].button("🔄 Restart Game"):
             emojis = ["🐱", "🐶", "🐰", "🐹", "🐸", "🐼"]
             st.session_state.cards = random.sample(emojis * 2, len(emojis) * 2)
             st.session_state.flipped = []
             st.session_state.matched = []
             st.session_state.attempts = 0
             st.session_state.start_time = time.time()
-
-    # with st.container():
-    #     st.subheader("🎨 Doodle Something!")
-    #     st.write("Draw freely below 🖌️")
-
-    #     canvas_result = st_canvas(
-    #         fill_color="rgba(255, 165, 0, 0.3)",
-    #         stroke_width=3,
-    #         stroke_color="#000000",
-    #         background_color="#ffffff",
-    #         height=300,
-    #         width=600,
-    #         drawing_mode="freedraw",
-    #         key="lorraine_canvas_01",  # fixed, unique key
-    #     )
-#     st.components.v1.html(
-#     """
-#     <iframe
-#         src="https://funhtml5games.com?embed=flappybird"
-#         width="100%"
-#         height="600"
-#         frameborder="0"
-#         scrolling="no">
-#     </iframe>
-#     """,
-#     height=600,
-#    )
 
 #contact me
 with tabs[4]:
