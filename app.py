@@ -1,7 +1,8 @@
 import streamlit as st
 import random
 import os
-import yagmail as yagmail
+import yagmail 
+import time
 from datetime import date
 from streamlit_drawable_canvas import st_canvas
 
@@ -197,13 +198,55 @@ with tabs[3]:
         st.warning("Give them some extra cuddles today 🧡")
 
     with st.container():
-        st.subheader("🎲 Roll the Dice!")
+        # st.subheader("🎲 Roll the Dice!")
 
-        if st.button("Roll!"):
-            dice = random.randint(1, 6)
-            st.image(f"https://upload.wikimedia.org/wikipedia/commons/{dice}/Dice-{dice}-b.svg", width=100)
-            st.write(f"You rolled a **{dice}**!")
+        # if st.button("Roll!"):
+        #     dice = random.randint(1, 6)
+        #     st.image(f"https://upload.wikimedia.org/wikipedia/commons/{dice}/Dice-{dice}-b.svg", width=100)
+        #     st.write(f"You rolled a **{dice}**!")
 
+        st.subheader("🎯 Reflex Speed Challenge")
+
+        if "game_state" not in st.session_state:
+            st.session_state.game_state = "ready"
+        if "start_time" not in st.session_state:
+            st.session_state.start_time = 0
+        if "reaction_time" not in st.session_state:
+            st.session_state.reaction_time = 0
+
+        if st.session_state.game_state == "ready":
+            st.info("Click **Start Game** and wait until the box turns green. Then click as FAST as you can!")
+            if st.button("Start Game"):
+                st.session_state.game_state = "waiting"
+                st.session_state.start_time = 0
+                st.experimental_rerun()
+
+        elif st.session_state.game_state == "waiting":
+            wait_time = random.uniform(2, 5)
+            st.write("⏳ Wait for it...")
+            time.sleep(wait_time)
+            st.session_state.start_time = time.time()
+            st.session_state.game_state = "go"
+            st.experimental_rerun()
+
+        elif st.session_state.game_state == "go":
+            st.markdown(
+                "<div style='background-color:#00ff00; height:100px; text-align:center; padding-top:30px; font-size:20px;'>"
+                "CLICK NOW!</div>",
+                unsafe_allow_html=True
+            )
+            if st.button("Click!"):
+                st.session_state.reaction_time = round((time.time() - st.session_state.start_time) * 1000, 2)
+                st.session_state.game_state = "result"
+                st.experimental_rerun()
+
+        elif st.session_state.game_state == "result":
+            st.success(f"⚡ Your reaction time: {st.session_state.reaction_time} ms")
+            if st.session_state.reaction_time < 250:
+                st.balloons()
+            if st.button("Play Again"):
+                st.session_state.game_state = "ready"
+                st.experimental_rerun()
 
     # with st.container():
     #     st.subheader("🎨 Doodle Something!")
