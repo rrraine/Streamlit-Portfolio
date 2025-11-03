@@ -1,49 +1,54 @@
 import streamlit as st
 import random
+import os
+import yagmail as yagmail
 from datetime import date
 
-# --- PAGE CONFIG ---
+
+# PAGE CONFIG 
 st.set_page_config(
     page_title="Lorraine's Portfolio",
     page_icon="🐾",
     layout="wide"
 )
 
-# --- HEADER ---
+#  HEADER 
 st.title("🌸 Lorraine Quezada")
-st.subheader("2nd Year Computer Science Student | Cat Lover | Developer of Kainderya 🐱🍽️")
+st.subheader("3rd Year Computer Science Student")
 st.write("Welcome to my digital space! I’m a passionate learner exploring the world of technology, creativity, and cats. 🐾")
 
-# --- NAVIGATION TABS ---
+#  NAVIGATION TABS 
 tabs = st.tabs(["🏠 Home", "🧍 About Me", "💼 Portfolio", "📊 Extras", "📫 Contact"])
 
-# =====================================================
-# 🏠 HOME TAB
-# =====================================================
+
 with tabs[0]:
     col1, col2 = st.columns([1, 2])
 
     with col1:
-        st.image("https://i.imgur.com/qO0JhA7.png", caption="That's me!", use_container_width=True)
+        st.image("images/lorraine_photo.png", caption="That's me!", use_container_width=True)
 
     with col2:
         st.markdown("""
         ### Hello there! 👋  
         I'm **Lorraine**, but you can call me *Raine, Lori, or Riri*.  
-        I'm currently a 2nd-year **Computer Science student at Cebu Institute of Technology**.
+        I'm currently a 3rd year **Computer Science student at Cebu Institute of Technology**.
 
         I love combining logic and creativity through programming, storytelling, and design.  
-        When I’m not coding, you’ll probably find me reading, working on Paws and Pages 🐾📖, or cuddling cats.
+        When I’m not coding, you’ll probably find me reading and taking care of my dogs.
         """)
 
         st.markdown("---")
-        st.metric("Years in Tech", 2)
-        st.metric("Projects Created", 5)
-        st.metric("Programming Languages Learned", 4)
+        col1, col2, col3 = st.columns(3)
 
-# =====================================================
-# 🧍 ABOUT ME TAB
-# =====================================================
+        with col1:
+            st.metric("Years in Tech", 3)
+
+        with col2:
+            st.metric("Projects Created", 5)
+
+        with col3:
+            st.metric("Programming Languages Learned", 4)
+
 with tabs[1]:
     st.header("🧠 My Story")
 
@@ -55,10 +60,10 @@ with tabs[1]:
 
     st.markdown("### 🌼 Education")
     st.write("- Bachelor of Science in Computer Science — Cebu Institute of Technology (2023–Present)")
-    st.write("- Graduated with honors in Senior High School")
+    st.write("- Graduated with high honors in Senior High School")
 
     st.markdown("### ✨ Hobbies & Interests")
-    st.write("🐱 Taking care of cats")
+    st.write("🐱 Taking care of my 2 dogs (3 but the eldest, Lucky, passed away) ")
     st.write("📚 Reading books and manga")
     st.write("💻 Building interactive apps and games")
     st.write("🎮 Playing strategy and rhythm games")
@@ -72,42 +77,84 @@ with tabs[1]:
     progress = st.slider("How close do you think I am to my goals?", 0, 100, 70)
     st.progress(progress / 100)
 
-# =====================================================
-# 💼 PORTFOLIO TAB
-# =====================================================
+
 with tabs[2]:
-    st.header("💼 My Portfolio")
+    st.header("My Portfolio")
 
-    project_tabs = st.tabs(["🎮 Kainderya", "🏫 CampusHive", "🐾 Paws and Pages"])
+    # Tabs for different projects
+    project_tabs = st.tabs([
+        "🎮 Kainderya",
+        "👮🏼 Inmate Escape",
+        "🏫 CampusHive",
+        "📄 My Work Portfolio"
+    ])
 
+  
     with project_tabs[0]:
         st.subheader("🎮 Kainderya — A Multiplayer Cooking Game")
-        st.image("https://i.imgur.com/1GsfD8I.png", caption="Kainderya Preview", use_container_width=True)
+        st.image("images/kainderya.jpg", caption="Kainderya Preview", use_container_width=True)
         st.write("""
-        A multiplayer cooking game inspired by Filipino eateries (karinderya, tapsilogan, etc.).
-        Players must cook and serve orders together, wash plates, and manage time — all in chaos and fun!
+         **Kainderya** is a cooperative multiplayer cooking game set in a lively Filipino eatery.  
+        Players work together to cook, serve, and clean up orders under time pressure — promoting teamwork and quick thinking.  
+        Inspired by everyday karinderya life, it brings local culture into a fun, chaotic kitchen challenge.
         """)
 
     with project_tabs[1]:
-        st.subheader("🏫 CampusHive — University Connection App")
-        st.image("https://i.imgur.com/6c8GJ4V.png", caption="CampusHive Interface", use_container_width=True)
+        st.subheader("Inmate Escape — Endless Runner Game")
+        st.image("images/inmateescape.jpg", caption="Inmate Escape Preview", use_container_width=True)
         st.write("""
-        CampusHive connects students and schools in Cebu. It helps users discover programs, view university details,
-        and engage in campus discussions. Built with Java and MySQL.
+        **Inmate Escape** is an endless runner game where players take on the role of an escaped inmate fleeing from the police.  
+        The speed increases as the game progresses, challenging players to dodge obstacles and survive as long as possible.  
+        The game combines adrenaline-pumping action with smooth, fast-paced gameplay inspired by *Subway Surfers*.
         """)
 
     with project_tabs[2]:
-        st.subheader("🐾 Paws and Pages — Bookstore & Cat Café Concept")
-        st.image("https://i.imgur.com/k6KMUxe.png", caption="Paws and Pages Mockup", use_container_width=True)
+        st.subheader("🏫 CampusHive — University Connection App")
+        st.image("images/campushive.png", caption="CampusHive Interface", use_container_width=True)
         st.write("""
-        A hybrid business concept that merges a cozy bookstore, cat café, and study hub for animal lovers.
-        Includes fostering, adoptions, and quiet workspaces.
+        **CampusHive** is an all-in-one mobile platform that connects students and universities across Cebu.  
+        Users can explore schools, view programs, and join campus discussions.  
+        Developed with **Java (Android)** and **MySQL**, it enhances student engagement through digital community building.
         """)
+
+
+   
+
+    with project_tabs[3]:
+        st.subheader("📄 My Work Portfolio as a Virtual Assistant")
+
+        with open("files/Lorraine_Quezada_Portfolio.pdf", "rb") as pdf_file:
+            PDFbyte = pdf_file.read()
+
+        st.download_button(
+            label="💾 Download Full PDF",
+            data=PDFbyte,
+            file_name="Lorraine_Quezada_Portfolio.pdf",
+            mime="application/pdf"
+        )
+
+
+    # # collapsible preview but so lag due to pdf size
+    #     with st.expander("👀 Preview My Portfolio (click to open)"):
+    #         import base64
+    #         base64_pdf = base64.b64encode(PDFbyte).decode("utf-8")
+    #         pdf_display = f"""
+    #         <iframe
+    #             src="data:application/pdf;base64,{base64_pdf}"
+    #             width="100%"
+    #             height="600px"
+    #             type="application/pdf"
+    #             style="border: none;"
+    #         ></iframe>
+    #         """
+    #         st.markdown(pdf_display, unsafe_allow_html=True)
+
 
     st.markdown("---")
     st.header("💡 Skills Overview")
 
     col1, col2, col3 = st.columns(3)
+
     col1.progress(0.9)
     col1.write("Python 🐍")
 
@@ -126,9 +173,6 @@ with tabs[2]:
     col3.progress(0.65)
     col3.write("JavaFX 🎨")
 
-# =====================================================
-# 📊 EXTRAS TAB
-# =====================================================
 with tabs[3]:
     st.header("📊 Extras & Fun Features")
 
@@ -141,17 +185,15 @@ with tabs[3]:
     ]
     st.info(random.choice(quotes))
 
-    st.markdown("### 🐱 Cat Happiness Level")
-    happiness = st.slider("How happy are your cats today?", 0, 10, 8)
+    st.markdown("### 🐱 Cat/Dog Happiness Level")
+    happiness = st.slider("How happy are your cats/dogs today?", 0, 10, 8)
     st.progress(happiness / 10)
     if happiness >= 8:
-        st.success("Your cats are purring with joy! 🐾")
+        st.success("Your cats/dogs are purring/wagging with joy! 🐾")
     else:
         st.warning("Give them some extra cuddles today 🧡")
 
-# =====================================================
-# 📫 CONTACT TAB
-# =====================================================
+
 with tabs[4]:
     st.header("📫 Contact Me")
 
@@ -159,18 +201,52 @@ with tabs[4]:
 
     col1, col2 = st.columns(2)
     with col1:
-        st.write("📧 **Email:** yourname@email.com")
-        st.write("💼 **LinkedIn:** [linkedin.com/in/lorrainequezada](https://linkedin.com)")
-        st.write("🐙 **GitHub:** [github.com/lorraineq](https://github.com)")
+        st.write("📧 **Email:** lorraineequezada@gmail.com")
+        st.write("💼 **LinkedIn:** [linkedin.com/in/lorrainequezada](https://www.linkedin.com/in/lorraine-quezada-377459329/)")
+        st.write("🐙 **GitHub:** [github.com/rrraine](https://github.com/rrraine)")
 
     with col2:
+ 
         with st.form("contact_form"):
-            name = st.text_input("Name")
-            message = st.text_area("Message")
-            submitted = st.form_submit_button("Send Message")
-            if submitted:
-                st.success(f"Thank you, {name}! Your message has been sent. 💌")
+            name = st.text_input("Your Name")
+            sender_email = st.text_input("Your Email")
+            message = st.text_area("Your Message")
 
-    st.markdown("---")
-    st.caption("© 2025 Lorraine Quezada | Made with 💖 and Streamlit")
+            submitted = st.form_submit_button("Send Message")
+
+            if submitted:
+                if name and sender_email and message:
+                    try:
+                   
+                        yag = yagmail.SMTP("lorraineequezada@gmail.com", "sazh cokd qxlf rtbr")
+
+                     
+                        subject = f"📬 New message from {name}"
+
+                    
+                        body = f"""
+                        <h3>New message received from your Streamlit Portfolio 💌</h3>
+                        <p><b>From:</b> {name} &lt;{sender_email}&gt;</p>
+                        <p><b>Message:</b></p>
+                        <blockquote style="border-left: 3px solid #ddd; padding-left: 10px;">
+                        {message.replace('\n', '<br>')}
+                        </blockquote>
+                        <hr>
+                        <p style="font-size: 12px; color: #888;">This message was sent via your Streamlit contact form.</p>
+                        """
+
+                        # Send the email
+                        yag.send(
+                            to="lorraineequezada@gmail.com",
+                            subject=subject,
+                            contents=body
+                        )
+
+                        st.success("Thank you! Your message has been sent successfully 💌")
+
+                    except Exception as e:
+                        st.error(f"❌ Oops! Something went wrong: {e}")
+                else:
+                    st.warning("Please fill out all fields before sending.")
+ 
 
