@@ -197,19 +197,51 @@ with tabs[3]:
         st.warning("Give them some extra cuddles today 🧡")
 
     with st.container():
-        st.subheader("🎨 Doodle Something!")
-        st.write("Draw freely below 🖌️")
+        st.subheader("🎨 Pixel Painter Mini-Game")
+        st.write("Click colors and paint the grid below 🎨")
 
-        canvas_result = st_canvas(
-            fill_color="rgba(255, 165, 0, 0.3)",
-            stroke_width=3,
-            stroke_color="#000000",
-            background_color="#ffffff",
-            height=300,
-            width=600,
-            drawing_mode="freedraw",
-            key="lorraine_canvas_01",  # fixed, unique key
-        )
+        # --- Color picker
+        color = st.color_picker("Choose your color", "#FF69B4")
+
+        # --- Initialize grid in session state
+        if "grid" not in st.session_state:
+            st.session_state.grid = [["#FFFFFF" for _ in range(8)] for _ in range(8)]
+
+        # --- Display 8x8 grid
+        for i in range(8):
+            cols = st.columns(8)
+            for j in range(8):
+                if cols[j].button(" ", key=f"pixel_{i}_{j}", help="Click to color"):
+                    st.session_state.grid[i][j] = color
+                cols[j].markdown(
+                    f"""
+                    <div style='background-color:{st.session_state.grid[i][j]};
+                                width:30px; height:30px; border-radius:4px;
+                                border:1px solid #ccc;'>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+
+        # --- Reset button
+        if st.button("🧹 Clear Canvas"):
+            st.session_state.grid = [["#FFFFFF" for _ in range(8)] for _ in range(8)]
+            st.rerun()
+
+    # with st.container():
+    #     st.subheader("🎨 Doodle Something!")
+    #     st.write("Draw freely below 🖌️")
+
+    #     canvas_result = st_canvas(
+    #         fill_color="rgba(255, 165, 0, 0.3)",
+    #         stroke_width=3,
+    #         stroke_color="#000000",
+    #         background_color="#ffffff",
+    #         height=300,
+    #         width=600,
+    #         drawing_mode="freedraw",
+    #         key="lorraine_canvas_01",  # fixed, unique key
+    #     )
 #     st.components.v1.html(
 #     """
 #     <iframe
