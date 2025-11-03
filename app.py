@@ -242,7 +242,7 @@ with tabs[3]:
 
         # Display stats
         st.markdown("---")
-        cols = st.columns([1, 1, 1, 1])  # Adjust width ratio if needed
+        cols = st.columns([1, 1, 1, 1])  
         cols[0].metric("Attempts", st.session_state.attempts)
         cols[1].metric("Matches Found", len(st.session_state.matched) // 2)
         if cols[2].button("🔄 Restart Game"):
